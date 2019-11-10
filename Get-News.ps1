@@ -1,17 +1,13 @@
 # Get-News
 # Used to get the news from various sources and writes the output
-# to the users desktop or to the screen.
+# to the users desktop in HTML readable format.
 
 <#
 .SYNOPSIS
-    Display news from various news locations.
+    Reads news from select locations.
     
 .DESCRIPTION
-    The cmdlet accepts one input switch, which will cause the output 
-    to be displayed to the screen vs. written to a file.
-
-.PARAMETER ShowOutput
-    Displays the output to the screen.
+    The cmdlet will dump an HTML file to the users desktop with current news.
 
 .EXAMPLE
     Get-News -ShowOutput
@@ -25,160 +21,101 @@ Param(
         [switch]
         $ShowOutput
 )
-$Output = "~/Desktop/News.html"
-if (Test-Path $Output) {Clear-Content $Output}
-Function WriteTechReuters {
-    $raw = Invoke-WebRequest http://feeds.reuters.com/reuters/technologyNews
-    [xml]$news = $raw.Content
+
+$allstories = @()
+
+$GuadrianWorld = Invoke-WebRequest https://www.theguardian.com/world/rss
+$CNNWorld = Invoke-WebRequest http://rss.cnn.com/rss/edition_world.rss
+$YahooWorld = Invoke-WebRequest https://www.yahoo.com/news/world/rss
+$AlJazeeraAll = Invoke-WebRequest http://www.aljazeera.com/xml/rss/all.xml
+#$BuzzfeedWorld = Invoke-WebRequest https://www.buzzfeed.com/world.xml
+$BBCWorld = Invoke-WebRequest http://feeds.bbci.co.uk/news/world/rss.xml
+$BBCUS = Invoke-WebRequest http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml
+$BBCTech = Invoke-WebRequest http://feeds.bbci.co.uk/news/technology/rss.xml
+$ReutersUS = Invoke-WebRequest http://feeds.reuters.com/Reuters/domesticNews
+$ReutersWorld = Invoke-WebRequest http://feeds.reuters.com/Reuters/worldNews
+$ReutersTech = Invoke-WebRequest http://feeds.reuters.com/reuters/technologyNews
+$WaPo = Invoke-WebRequest http://feeds.washingtonpost.com/rss/rss_morning-mix
+function PullNews1($feed) {
+    [xml]$feedxml = $feed.Content
     $stories = @()
-    $items = $news.SelectNodes("//item")
+    $items = $feedxml.rss.channel.item
+        ForEach ($item in $items) {
+            $title = $item.title."#cdata-section"
+            $link = $item.link
+            $pubdate = $item.pubdate
+            $pubdate = $pubdate | Get-Date -ErrorAction SilentlyContinue
+            $desc = $item.description."#cdata-section"
+            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc}
+            $stories += $story
+        }
+    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 5 | Sort-Object -Property pubdate -Descending 
+    $stories
+}
+function PullNews2($feed) {
+    [xml]$feedxml = $feed.Content
+    $stories = @()
+    $items = $feedxml.rss.channel.item
         ForEach ($item in $items) {
             $title = $item.title
             $link = $item.link
             $pubdate = $item.pubdate
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate}
+            $pubdate = $pubdate | Get-Date -ErrorAction SilentlyContinue
+            $desc = $item.description
+            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc}
             $stories += $story
         }
-    $stories = $stories | Sort-Object pubdate | Select-Object -First 10 | Sort-Object -Property pubdate -Descending
-    foreach($blah in $stories) {
-        Write-Output "<font size=""-3"">"$blah.pubdate"</font>"       
-        Write-Output "<a href="""
-        $blah.link
-        Write-Output """>"
-        $blah.title
-        Write-Output "</a><br>"
-    }
+    $stories = $stories | Sort-Object pubdate | Select-Object -First 5 | Sort-Object -Property pubdate -Descending
+    $stories
 }
-Function WriteWorldReuters {
-    $raw = Invoke-WebRequest http://feeds.reuters.com/Reuters/worldNews
-    [xml]$news = $raw.Content
-    $stories = @()
-    $items = $news.SelectNodes("//item")
-        ForEach ($item in $items) {
-            $title = $item.title
-            $link = $item.link
-            $pubdate = $item.pubdate
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate}
-            $stories += $story
-        }
-    $stories = $stories | Sort-Object pubdate | Select-Object -First 10 | Sort-Object -Property pubdate -Descending
-    foreach($blah in $stories) {
-        Write-Output "<font size=""-3"">"$blah.pubdate"</font>"       
-        Write-Output "<a href="""
-        $blah.link
-        Write-Output """>"
-        $blah.title
-        Write-Output "</a><br>"
-    }
-}
-Function WriteUSReuters {
-    $raw = Invoke-WebRequest http://feeds.reuters.com/Reuters/domesticNews
-    [xml]$news = $raw.Content
-    $stories = @()
-    $items = $news.SelectNodes("//item")
-        ForEach ($item in $items) {
-            $title = $item.title
-            $link = $item.link
-            $pubdate = $item.pubdate
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate}
-            $stories += $story
-        }
-    $stories = $stories | Sort-Object pubdate | Select-Object -First 10 | Sort-Object -Property pubdate -Descending
-    foreach($blah in $stories) {
-        Write-Output "<font size=""-3"">"$blah.pubdate"</font>"       
-        Write-Output "<a href="""
-        $blah.link
-        Write-Output """>"
-        $blah.title
-        Write-Output "</a><br>"
-    }
-}
-Function WriteTechBBC {
-    $raw = Invoke-WebRequest http://feeds.bbci.co.uk/news/technology/rss.xml
-    [xml]$news = $raw.Content
-    $stories = @()
-    $items = $news.SelectNodes("//item")
-        ForEach ($item in $items) {
-            $title = $item.title."#cdata-section"
-            $link = $item.link
-            $pubdate = $item.pubdate.substring(5)
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate}
-            $stories += $story
-        }
-    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 5
-    # $stories
-    foreach($story in $stories) {
-        Write-Output "<font size=""-3"">"$story.pubdate"</font>"
-        Write-Output "<a href="""
-        $story.link
-        Write-Output """>"
-        $story.title
-        Write-Output "</a><br>"
-    }
-}
-Function WriteUSBBC {
-    $raw = Invoke-WebRequest http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml
-    [xml]$news = $raw.Content
-    $stories = @()
-    $items = $news.SelectNodes("//item")
-        ForEach ($item in $items) {
-            $title = $item.title."#cdata-section"
-            $link = $item.link
-            $pubdate = $item.pubdate.substring(5)
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate}
-            $stories += $story
-        }
-    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 5
-    # $stories
-    foreach($story in $stories) {
-        Write-Output "<font size=""-3"">"$story.pubdate"</font>"
-        Write-Output "<a href="""
-        $story.link
-        Write-Output """>"
-        $story.title
-        Write-Output "</a><br>"
-    }
-}
-Function WriteWorldBBC {
-    $raw = Invoke-WebRequest http://feeds.bbci.co.uk/news/world/rss.xml
-    [xml]$news = $raw.Content
-    $stories = @()
-    $items = $news.SelectNodes("//item")
-        ForEach ($item in $items) {
-            $title = $item.title."#cdata-section"
-            $link = $item.link
-            $pubdate = $item.pubdate.substring(5)
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate}
-            $stories += $story
-        }
-    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 5
-    # $stories
-    foreach($story in $stories) {
-        Write-Output "<font size=""-3"">"$story.pubdate"</font>"
-        Write-Output "<a href="""
-        $story.link
-        Write-Output """>"
-        $story.title
-        Write-Output "</a><br>"
-    }
-}
+
+$allstories += PullNews1($CNNWorld)
+#$allstories += PullNews2($BuzzfeedWorld) 
+$allstories += PullNews2($GuadrianWorld)
+$allstories += PullNews2($YahooWorld)
+$allstories += PullNews1($AlJazeeraAll)
+$allstories += PullNews1($BBCWorld)
+$allstories += PullNews1($BBCUS)
+$allstories += PullNews1($BBCTech)
+$allstories += PullNews2($ReutersUS)
+$allstories += PullNews2($ReutersTech)
+$allstories += PullNews2($ReutersWorld)
+$allstories += PullNews2($WaPo)
+
+$allstories = $allstories | Sort-Object -Property pubdate -Descending
 function WriteFile {
-    Add-Content -Value (Write-Output "<b>Reuters News - </b>") -Path $Output
+    Add-Content -Value (Write-Output "<b>News - </b>") -Path $Output
     Add-Content -Value (Get-date) -Path $Output
     Add-Content -Value ("<br>") -Path $Output
-    Add-Content -Value (Write-Output "<b><br>Tech News<br></b>") -Path $Output
-    Add-Content -Value(WriteTechReuters) -Path $Output
-    Add-Content -Value (Write-Output "<b><br>World News<br></b>") -Path $Output
-    Add-Content -Value(WriteWorldReuters) -Path $Output
-    Add-Content -Value (Write-Output "<b><br>US News<br></b>") -Path $Output
-    Add-Content -Value(WriteUSReuters) -Path $Output
-    Add-Content -Value (Write-Output "<br><b>BBC News</b><br>") -Path $Output
-    Add-Content -Value (Write-Output "<b><br>World News<br></b>") -Path $Output
-    Add-Content -Value(WriteWorldBBC) -Path $Output
-    Add-Content -Value (Write-Output "<b><br>US News<br></b>") -Path $Output
-    Add-Content -Value(WriteUSBBC) -Path $Output
-    Add-Content -Value (Write-Output "<b><br>Tech News<br></b>") -Path $Output
-    Add-Content -Value(WriteTechBBC) -Path $Output
+    foreach($story in $allstories) {
+        Add-Content -Value (Write-Output "<font size=""-3"">"$story.pubdate "</font>") -Path $Output       
+        Add-Content -Value (Write-Output "&nbsp;") -Path $Output
+        Add-Content -Value (Write-Output "<a href=""") -Path $Output
+        Add-Content -Value ($story.link) -Path $Output
+        Add-Content -Value (Write-Output """>") -Path $Output
+        Add-Content -Value ($story.title) -Path $Output
+        Add-Content -Value (Write-Output "</a><br>") -Path $Output
+        }
+}
+function WriteHost {
+    Write-Host "News"(Get-Date)
+    foreach($story in $allstories) {
+        $story.pubdate
+        $story.title
+        }
     }
 
-WriteFile
+if($ShowOutput) {
+    WriteHost
+    Exit
+}
+else {
+    $Output = "~/Desktop/News.html"
+    if (Test-Path $Output) {
+        Clear-Content $Output
+        }
+        else {
+            New-Item -Path $Output -ItemType File -Confirm
+        }
+    WriteFile
+}
