@@ -36,6 +36,9 @@ $ReutersUS = Invoke-WebRequest http://feeds.reuters.com/Reuters/domesticNews
 $ReutersWorld = Invoke-WebRequest http://feeds.reuters.com/Reuters/worldNews
 $ReutersTech = Invoke-WebRequest http://feeds.reuters.com/reuters/technologyNews
 $WaPo = Invoke-WebRequest http://feeds.washingtonpost.com/rss/rss_morning-mix
+#$ARSApple = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/apple 
+#$ARSIT = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/technology-lab
+#$ARSSec = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/security
 function PullNews1($feed) {
     [xml]$feedxml = $feed.Content
     $stories = @()
@@ -70,7 +73,7 @@ function PullNews2($feed) {
 }
 
 $allstories += PullNews1($CNNWorld)
-#$allstories += PullNews2($BuzzfeedWorld) 
+# Thursday, November 14, 2019 10:01:06 AM Not being updated $allstories += PullNews2($BuzzfeedWorld) 
 $allstories += PullNews2($GuadrianWorld)
 $allstories += PullNews2($YahooWorld)
 $allstories += PullNews1($AlJazeeraAll)
@@ -81,6 +84,9 @@ $allstories += PullNews2($ReutersUS)
 $allstories += PullNews2($ReutersTech)
 $allstories += PullNews2($ReutersWorld)
 $allstories += PullNews2($WaPo)
+# Thursday, November 14, 2019 10:01:06 AM Not being updated $allstories += PullNews2($ARSApple)
+# Thursday, November 14, 2019 10:01:06 AM Not being updated $allstories += PullNews2($ARSIT)
+# Thursday, November 14, 2019 10:01:06 AM Not being updated $allstories += PullNews2($ARSSec)
 
 $allstories = $allstories | Sort-Object -Property pubdate -Descending
 function WriteFile {
@@ -118,4 +124,5 @@ else {
             New-Item -Path $Output -ItemType File -Confirm
         }
     WriteFile
+    Invoke-Item $Output
 }
