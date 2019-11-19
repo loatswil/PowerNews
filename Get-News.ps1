@@ -68,7 +68,7 @@ function PullNews2($feed) {
             $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc}
             $stories += $story
         }
-    $stories = $stories | Sort-Object pubdate | Select-Object -First 5 | Sort-Object -Property pubdate -Descending
+    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 5 | Sort-Object -Property pubdate -Descending
     $stories
 }
 
