@@ -39,17 +39,22 @@ $WaPo = Invoke-WebRequest http://feeds.washingtonpost.com/rss/rss_morning-mix
 $ARSApple = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/apple 
 $ARSIT = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/technology-lab
 $ARSSec = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/security
+$USAWorld = Invoke-WebRequest https://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories
+$USANational = Invoke-WebRequest https://rssfeeds.usatoday.com/UsatodaycomNation-TopStories
+$USATech = Invoke-WebRequest https://rssfeeds.usatoday.com/usatoday-TechTopStories
+
 function PullNews1($feed) {
     [xml]$feedxml = $feed.Content
     $stories = @()
     $items = $feedxml.rss.channel.item
+    $feedtitle = $feedxml.rss.channel.title
         ForEach ($item in $items) {
             $title = $item.title."#cdata-section"
             $link = $item.link
             $pubdate = $item.pubdate
             $pubdate = $pubdate | Get-Date -ErrorAction SilentlyContinue
             $desc = $item.description."#cdata-section"
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc}
+            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc;feedtitle=$feedtitle}
             $stories += $story
         }
     $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 3 | Sort-Object -Property pubdate -Descending 
@@ -59,13 +64,14 @@ function PullNews2($feed) {
     [xml]$feedxml = $feed.Content
     $stories = @()
     $items = $feedxml.rss.channel.item
+    $feedtitle = $feedxml.rss.channel.title
         ForEach ($item in $items) {
             $title = $item.title
             $link = $item.link
             $pubdate = $item.pubdate
             $pubdate = $pubdate | Get-Date -ErrorAction SilentlyContinue
             $desc = $item.description
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc}
+            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc;feedtitle=$feedtitle}
             $stories += $story
         }
     $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 3 | Sort-Object -Property pubdate -Descending
@@ -87,6 +93,9 @@ $allstories += PullNews2($WaPo)
 $allstories += PullNews2($ARSApple)
 $allstories += PullNews2($ARSIT)
 $allstories += PullNews2($ARSSec)
+$allstories += PullNews2($USAWorld)
+$allstories += PullNews2($USANational)
+$allstories += PullNews2($USATech)
 
 $allstories = $allstories | Sort-Object -Property pubdate -Descending
 function WriteFile {
@@ -100,7 +109,9 @@ function WriteFile {
         Add-Content -Value ($story.link) -Path $Output
         Add-Content -Value (Write-Output """>") -Path $Output
         Add-Content -Value ($story.title) -Path $Output
-        Add-Content -Value (Write-Output "</a><br>") -Path $Output
+        Add-Content -Value (Write-Output "</a>") -Path $Output
+        Add-Content -Value (Write-Output "<font size=""-1"">"$story.feedtitle "</font>") -Path $Output
+        Add-Content -Value (Write-Output "<br>") -Path $Output
         }
 }
 function WriteHost {

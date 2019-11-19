@@ -31,13 +31,14 @@ function PullNews1($feed) {
     [xml]$feedxml = $feed.Content
     $stories = @()
     $items = $feedxml.rss.channel.item
+    $feedtitle = $feedxml.rss.channel.title
         ForEach ($item in $items) {
             $title = $item.title."#cdata-section"
             $link = $item.link
             $pubdate = $item.pubdate
             $pubdate = $pubdate | Get-Date -ErrorAction SilentlyContinue
             $desc = $item.description."#cdata-section"
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc}
+            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc;feedtitle=$feedtitle}
             $stories += $story
         }
     #$stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 3 | Sort-Object -Property pubdate -Descending 
