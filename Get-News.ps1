@@ -28,7 +28,7 @@ $GuadrianWorld = Invoke-WebRequest https://www.theguardian.com/world/rss
 $CNNWorld = Invoke-WebRequest http://rss.cnn.com/rss/edition_world.rss
 $YahooWorld = Invoke-WebRequest https://www.yahoo.com/news/world/rss
 $AlJazeeraAll = Invoke-WebRequest http://www.aljazeera.com/xml/rss/all.xml
-#$BuzzfeedWorld = Invoke-WebRequest https://www.buzzfeed.com/world.xml
+$BuzzfeedWorld = Invoke-WebRequest https://www.buzzfeed.com/world.xml
 $BBCWorld = Invoke-WebRequest http://feeds.bbci.co.uk/news/world/rss.xml
 $BBCUS = Invoke-WebRequest http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml
 $BBCTech = Invoke-WebRequest http://feeds.bbci.co.uk/news/technology/rss.xml
@@ -36,9 +36,9 @@ $ReutersUS = Invoke-WebRequest http://feeds.reuters.com/Reuters/domesticNews
 $ReutersWorld = Invoke-WebRequest http://feeds.reuters.com/Reuters/worldNews
 $ReutersTech = Invoke-WebRequest http://feeds.reuters.com/reuters/technologyNews
 $WaPo = Invoke-WebRequest http://feeds.washingtonpost.com/rss/rss_morning-mix
-#$ARSApple = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/apple 
-#$ARSIT = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/technology-lab
-#$ARSSec = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/security
+$ARSApple = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/apple 
+$ARSIT = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/technology-lab
+$ARSSec = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/security
 function PullNews1($feed) {
     [xml]$feedxml = $feed.Content
     $stories = @()
@@ -52,7 +52,7 @@ function PullNews1($feed) {
             $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc}
             $stories += $story
         }
-    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 5 | Sort-Object -Property pubdate -Descending 
+    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 3 | Sort-Object -Property pubdate -Descending 
     $stories
 }
 function PullNews2($feed) {
@@ -68,12 +68,12 @@ function PullNews2($feed) {
             $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc}
             $stories += $story
         }
-    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 5 | Sort-Object -Property pubdate -Descending
+    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 3 | Sort-Object -Property pubdate -Descending
     $stories
 }
 
 $allstories += PullNews1($CNNWorld)
-# Thursday, November 14, 2019 10:01:06 AM Not being updated $allstories += PullNews2($BuzzfeedWorld) 
+$allstories += PullNews2($BuzzfeedWorld) 
 $allstories += PullNews2($GuadrianWorld)
 $allstories += PullNews2($YahooWorld)
 $allstories += PullNews1($AlJazeeraAll)
@@ -84,9 +84,9 @@ $allstories += PullNews2($ReutersUS)
 $allstories += PullNews2($ReutersTech)
 $allstories += PullNews2($ReutersWorld)
 $allstories += PullNews2($WaPo)
-# Thursday, November 14, 2019 10:01:06 AM Not being updated $allstories += PullNews2($ARSApple)
-# Thursday, November 14, 2019 10:01:06 AM Not being updated $allstories += PullNews2($ARSIT)
-# Thursday, November 14, 2019 10:01:06 AM Not being updated $allstories += PullNews2($ARSSec)
+$allstories += PullNews2($ARSApple)
+$allstories += PullNews2($ARSIT)
+$allstories += PullNews2($ARSSec)
 
 $allstories = $allstories | Sort-Object -Property pubdate -Descending
 function WriteFile {
