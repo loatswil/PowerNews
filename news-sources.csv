@@ -14,3 +14,6 @@ WaPo,http://feeds.washingtonpost.com/rss/rss_morning-mix
 ARSApple,http://feeds.arstechnica.com/arstechnica/apple 
 ARSIT,http://feeds.arstechnica.com/arstechnica/technology-lab
 ARSSec,http://feeds.arstechnica.com/arstechnica/security
+USAWorld, https://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories
+USANational, https://rssfeeds.usatoday.com/UsatodaycomNation-TopStories
+USATech, https://rssfeeds.usatoday.com/usatoday-TechTopStories
