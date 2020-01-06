@@ -10,10 +10,13 @@ BBCTech,http://feeds.bbci.co.uk/news/technology/rss.xml
 ReutersUS,http://feeds.reuters.com/Reuters/domesticNews
 ReutersWorld,http://feeds.reuters.com/Reuters/worldNews
 ReutersTech,http://feeds.reuters.com/reuters/technologyNews
-WaPo,http://feeds.washingtonpost.com/rss/rss_morning-mix
-ARSApple,http://feeds.arstechnica.com/arstechnica/apple 
-ARSIT,http://feeds.arstechnica.com/arstechnica/technology-lab
-ARSSec,http://feeds.arstechnica.com/arstechnica/security
-USAWorld, https://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories
-USANational, https://rssfeeds.usatoday.com/UsatodaycomNation-TopStories
-USATech, https://rssfeeds.usatoday.com/usatoday-TechTopStories
+WSJWorld,https://feeds.a.dj.com/rss/RSSWorldNews.xml
+WSJTech,https://feeds.a.dj.com/rss/RSSWSJD.xml
+FA,https://www.foreignaffairs.com/rss.xml
+USAWorld,https://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories
+USANational,https://rssfeeds.usatoday.com/UsatodaycomNation-TopStories
+USATech,https://rssfeeds.usatoday.com/usatoday-TechTopStories
+THEWEEK,https://theweek.com/rss.xml
+POCongress,http://www.politico.com/rss/congress.xml
+PODefense,http://www.politico.com/rss/defense.xml
+POEnergy,http://www.politico.com/rss/energy.xml
