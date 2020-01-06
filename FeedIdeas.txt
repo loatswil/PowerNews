@@ -1,0 +1,8 @@
+https://theweek.com/rss.xml
+https://www.ap.org/en-us/
+https://www.bloomberg.com/
+https://www.foreignaffairs.com/
+https://www.theatlantic.com/
+https://www.politico.com/
+https://archive.nytimes.com/www.nytimes.com/services/xml/rss/index.html
+https://www.wsj.com/news/rss-news-and-feeds
