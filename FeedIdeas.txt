@@ -1,9 +1,30 @@
-https://theweek.com/rss.xml
 
-https://www.ap.org/en-us/
-https://www.bloomberg.com/
-https://www.foreignaffairs.com/
-https://www.theatlantic.com/
+
+
+
 https://www.politico.com/
+
+<# Can't find reliabel RSS feeds
+
+https://www.bloomberg.com/
+
+#>
+
+<# Not added due to custom formatting
+
+https://www.theatlantic.com/
 https://archive.nytimes.com/www.nytimes.com/services/xml/rss/index.html
-https://www.wsj.com/news/rss-news-and-feeds
+https://www.ap.org/en-us/
+
+#>
+
+<# Added 
+
+https://feeds.a.dj.com/rss/RSSWorldNews.xml
+https://feeds.a.dj.com/rss/RSSWSJD.xml
+
+https://theweek.com/rss.xml
+https://www.foreignaffairs.com/
+
+
+#>

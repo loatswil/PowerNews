@@ -11,6 +11,61 @@
 
 .EXAMPLE
     Get-News -ShowOutput
+
+  
+#>
+
+<# TLS Notes
+
+  TLS errors might persist if PowerShell uses TLS 1 (default)
+    This can be fixed with this command.
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    For details:
+    https://stackoverflow.com/questions/41618766/powershell-invoke-webrequest-fails-with-ssl-tls-secure-channel
+
+#>
+
+<# Feed Updates!!!
+
+Added 
+
+https://www.politico.com/
+https://feeds.a.dj.com/rss/RSSWorldNews.xml
+https://feeds.a.dj.com/rss/RSSWSJD.xml
+https://theweek.com/rss.xml
+https://www.foreignaffairs.com/
+https://www.theguardian.com/world/rss
+http://rss.cnn.com/rss/edition_world.rss
+https://www.yahoo.com/news/world/rss
+http://www.aljazeera.com/xml/rss/all.xml
+https://www.buzzfeed.com/world.xml
+http://feeds.bbci.co.uk/news/world/rss.xml
+http://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml
+http://feeds.bbci.co.uk/news/technology/rss.xml
+http://feeds.reuters.com/Reuters/domesticNews
+http://feeds.reuters.com/Reuters/worldNews
+http://feeds.reuters.com/reuters/technologyNews
+https://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories
+https://rssfeeds.usatoday.com/UsatodaycomNation-TopStories
+https://rssfeeds.usatoday.com/usatoday-TechTopStories
+
+Can't find reliabel RSS feeds
+
+https://www.bloomberg.com/
+
+Not added due to custom formatting
+
+https://www.theatlantic.com/
+https://archive.nytimes.com/www.nytimes.com/services/xml/rss/index.html
+https://www.ap.org/en-us/
+
+Stale feeds
+
+http://feeds.washingtonpost.com/rss/rss_morning-mix
+http://feeds.arstechnica.com/arstechnica/apple 
+http://feeds.arstechnica.com/arstechnica/technology-lab
+http://feeds.arstechnica.com/arstechnica/security
+
 #>
 
 [CmdletBinding()]
@@ -35,13 +90,16 @@ $BBCTech = Invoke-WebRequest http://feeds.bbci.co.uk/news/technology/rss.xml
 $ReutersUS = Invoke-WebRequest http://feeds.reuters.com/Reuters/domesticNews
 $ReutersWorld = Invoke-WebRequest http://feeds.reuters.com/Reuters/worldNews
 $ReutersTech = Invoke-WebRequest http://feeds.reuters.com/reuters/technologyNews
-$WaPo = Invoke-WebRequest http://feeds.washingtonpost.com/rss/rss_morning-mix
-$ARSApple = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/apple 
-$ARSIT = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/technology-lab
-$ARSSec = Invoke-WebRequest http://feeds.arstechnica.com/arstechnica/security
+$WSJWorld = Invoke-WebRequest https://feeds.a.dj.com/rss/RSSWorldNews.xml
+$WSJTech = Invoke-WebRequest https://feeds.a.dj.com/rss/RSSWSJD.xml
+$FA = Invoke-WebRequest https://www.foreignaffairs.com/rss.xml
 $USAWorld = Invoke-WebRequest https://rssfeeds.usatoday.com/UsatodaycomWorld-TopStories
 $USANational = Invoke-WebRequest https://rssfeeds.usatoday.com/UsatodaycomNation-TopStories
 $USATech = Invoke-WebRequest https://rssfeeds.usatoday.com/usatoday-TechTopStories
+$THEWEEK = Invoke-WebRequest https://theweek.com/rss.xml
+$POCongress = Invoke-WebRequest http://www.politico.com/rss/congress.xml
+$PODefense = Invoke-WebRequest http://www.politico.com/rss/defense.xml
+$POEnergy = Invoke-WebRequest http://www.politico.com/rss/energy.xml
 
 function PullNews1($feed) {
     [xml]$feedxml = $feed.Content
@@ -89,13 +147,16 @@ $allstories += PullNews1($BBCTech)
 $allstories += PullNews2($ReutersUS)
 $allstories += PullNews2($ReutersTech)
 $allstories += PullNews2($ReutersWorld)
-$allstories += PullNews2($WaPo)
-$allstories += PullNews2($ARSApple)
-$allstories += PullNews2($ARSIT)
-$allstories += PullNews2($ARSSec)
+$allstories += PullNews1($THEWEEK)
+$allstories += PullNews2($WSJWorld)
+$allstories += PullNews2($WSJTech)
 $allstories += PullNews2($USAWorld)
 $allstories += PullNews2($USANational)
 $allstories += PullNews2($USATech)
+$allstories += PullNews2($FA)
+$allstories += PullNews2($POCongress)
+$allstories += PullNews2($PODefense)
+$allstories += PullNews2($POEnergy)
 
 $allstories = $allstories | Sort-Object -Property pubdate -Descending
 function WriteFile {
