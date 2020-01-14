@@ -73,8 +73,10 @@ http://feeds.arstechnica.com/arstechnica/security
 Param(
         [Parameter(Mandatory=$false)]
         [System.Management.Automation.ValidateNotNullOrEmptyAttribute()]
-        [switch]
-        $ShowOutput
+        [switch] $ShowOutput,
+        [Parameter(Mandatory=$false)]
+        [System.Management.Automation.ValidateNotNullOrEmptyAttribute()]
+        [string] $BlackList
 )
 
 $allstories = @()
@@ -124,13 +126,13 @@ function PullNews2($feed) {
     $items = $feedxml.rss.channel.item
     $feedtitle = $feedxml.rss.channel.title
         ForEach ($item in $items) {
-            $title = $item.title
-            $link = $item.link
-            $pubdate = $item.pubdate
-            $pubdate = $pubdate | Get-Date -ErrorAction SilentlyContinue
-            $desc = $item.description
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc;feedtitle=$feedtitle}
-            $stories += $story
+                $title = $item.title
+                $link = $item.link
+                $pubdate = $item.pubdate
+                $pubdate = $pubdate | Get-Date -ErrorAction SilentlyContinue
+                $desc = $item.description
+                $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc;feedtitle=$feedtitle}
+                $stories += $story
         }
     $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 3 | Sort-Object -Property pubdate -Descending
     $stories
@@ -159,20 +161,23 @@ $allstories += PullNews2($PODefense)
 $allstories += PullNews2($POEnergy)
 
 $allstories = $allstories | Sort-Object -Property pubdate -Descending
-function WriteFile {
-    Add-Content -Value (Write-Output "<b>News - </b>") -Path $Output
+
+function WriteFile($BlackList) {
+    Add-Content -Value (Write-Output "<b>News - Blacklisting: $BlackList</b>") -Path $Output
     Add-Content -Value (Get-date) -Path $Output
     Add-Content -Value ("<br>") -Path $Output
     foreach($story in $allstories) {
-        Add-Content -Value (Write-Output "<font size=""-3"">"$story.pubdate "</font>") -Path $Output       
-        Add-Content -Value (Write-Output "&nbsp;") -Path $Output
-        Add-Content -Value (Write-Output "<a href=""") -Path $Output
-        Add-Content -Value ($story.link) -Path $Output
-        Add-Content -Value (Write-Output """>") -Path $Output
-        Add-Content -Value ($story.title) -Path $Output
-        Add-Content -Value (Write-Output "</a>") -Path $Output
-        Add-Content -Value (Write-Output "<font size=""-1"">"$story.feedtitle "</font>") -Path $Output
-        Add-Content -Value (Write-Output "<br>") -Path $Output
+        If ($story.title -notmatch $BlackList){
+            Add-Content -Value (Write-Output "<font size=""-3"">"$story.pubdate "</font>") -Path $Output       
+            Add-Content -Value (Write-Output "&nbsp;") -Path $Output
+            Add-Content -Value (Write-Output "<a href=""") -Path $Output
+            Add-Content -Value ($story.link) -Path $Output
+            Add-Content -Value (Write-Output """>") -Path $Output
+            Add-Content -Value ($story.title) -Path $Output
+            Add-Content -Value (Write-Output "</a>") -Path $Output
+            Add-Content -Value (Write-Output "<font size=""-1"">"$story.feedtitle "</font>") -Path $Output
+            Add-Content -Value (Write-Output "<br>") -Path $Output
+            }
         }
 }
 function WriteHost {
@@ -195,6 +200,6 @@ else {
         else {
             New-Item -Path $Output -ItemType File -Confirm
         }
-    WriteFile
+    WriteFile($BlackList)
     Invoke-Item $Output
 }
