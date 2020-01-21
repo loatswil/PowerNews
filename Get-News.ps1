@@ -76,7 +76,10 @@ Param(
         [switch] $ShowOutput,
         [Parameter(Mandatory=$false)]
         [System.Management.Automation.ValidateNotNullOrEmptyAttribute()]
-        [string] $BlackList
+        [switch] $Whitelist,
+        [Parameter(Mandatory=$false)]
+        [System.Management.Automation.ValidateNotNullOrEmptyAttribute()]
+        [string] $Blacklist
 )
 
 $allstories = @()
@@ -162,23 +165,41 @@ $allstories += PullNews2($POEnergy)
 
 $allstories = $allstories | Sort-Object -Property pubdate -Descending
 
-function WriteFile($BlackList) {
-    Add-Content -Value (Write-Output "<b>News - Blacklisting: $BlackList</b>") -Path $Output
-    Add-Content -Value (Get-date) -Path $Output
-    Add-Content -Value ("<br>") -Path $Output
-    foreach($story in $allstories) {
-        If ($story.title -notmatch $BlackList){
-            Add-Content -Value (Write-Output "<font size=""-3"">"$story.pubdate "</font>") -Path $Output       
-            Add-Content -Value (Write-Output "&nbsp;") -Path $Output
-            Add-Content -Value (Write-Output "<a href=""") -Path $Output
-            Add-Content -Value ($story.link) -Path $Output
-            Add-Content -Value (Write-Output """>") -Path $Output
-            Add-Content -Value ($story.title) -Path $Output
-            Add-Content -Value (Write-Output "</a>") -Path $Output
-            Add-Content -Value (Write-Output "<font size=""-1"">"$story.feedtitle "</font>") -Path $Output
-            Add-Content -Value (Write-Output "<br>") -Path $Output
-            }
+function WriteFile($Blacklist, $Whitelist) {
+        if ($Blacklist) {
+            Add-Content -Value (Write-Output "<b>News - Blacklisting: $BlackList</b>") -Path $Output
+            Add-Content -Value (Get-date) -Path $Output
+            Add-Content -Value ("<br>") -Path $Output
+            foreach($story in $allstories) {
+                If ($story.title -notmatch $BlackList){
+                    Add-Content -Value (Write-Output "<font size=""-3"">"$story.pubdate "</font>") -Path $Output       
+                    Add-Content -Value (Write-Output "&nbsp;") -Path $Output
+                    Add-Content -Value (Write-Output "<a href=""") -Path $Output
+                    Add-Content -Value ($story.link) -Path $Output
+                    Add-Content -Value (Write-Output """>") -Path $Output
+                    Add-Content -Value ($story.title) -Path $Output
+                    Add-Content -Value (Write-Output "</a>") -Path $Output
+                    Add-Content -Value (Write-Output "<font size=""-1"">"$story.feedtitle "</font>") -Path $Output
+                    Add-Content -Value (Write-Output "<br>") -Path $Output
+                    }
+        Else {
+            Add-Content -Value (Write-Output "<b>News</b>") -Path $Output
+            Add-Content -Value (Get-date) -Path $Output
+            Add-Content -Value ("<br>") -Path $Output
+            foreach($story in $allstories) {
+                Add-Content -Value (Write-Output "<font size=""-3"">"$story.pubdate "</font>") -Path $Output       
+                Add-Content -Value (Write-Output "&nbsp;") -Path $Output
+                Add-Content -Value (Write-Output "<a href=""") -Path $Output
+                Add-Content -Value ($story.link) -Path $Output
+                Add-Content -Value (Write-Output """>") -Path $Output
+                Add-Content -Value ($story.title) -Path $Output
+                Add-Content -Value (Write-Output "</a>") -Path $Output
+                Add-Content -Value (Write-Output "<font size=""-1"">"$story.feedtitle "</font>") -Path $Output
+                Add-Content -Value (Write-Output "<br>") -Path $Output
+                }
+            }  
         }
+    }
 }
 function WriteHost {
     Write-Host "News"(Get-Date)
