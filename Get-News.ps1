@@ -29,6 +29,7 @@
 
 Added 
 
+https://www.engadget.com/rss.xml
 https://www.politico.com/
 https://feeds.a.dj.com/rss/RSSWorldNews.xml
 https://feeds.a.dj.com/rss/RSSWSJD.xml
@@ -84,6 +85,7 @@ Param(
 
 $allstories = @()
 
+$Engadget = Invoke-WebRequest https://www.engadget.com/rss.xml
 $GuadrianWorld = Invoke-WebRequest https://www.theguardian.com/world/rss
 $CNNWorld = Invoke-WebRequest http://rss.cnn.com/rss/edition_world.rss
 $YahooWorld = Invoke-WebRequest https://www.yahoo.com/news/world/rss
@@ -141,6 +143,7 @@ function PullNews2($feed) {
     $stories
 }
 
+$allstories += PullNews1($Engadget)
 $allstories += PullNews1($CNNWorld)
 $allstories += PullNews2($BuzzfeedWorld) 
 $allstories += PullNews2($GuadrianWorld)
