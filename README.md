@@ -16,6 +16,8 @@ Feed Updates!!!
 
 Added 
 
+https://www.npr.org/rss/rss.php?id=1003
+https://www.npr.org/rss/rss.php?id=1004
 https://www.economist.com/united-states/rss.xml
 https://www.economist.com/international/rss.xml
 https://www.economist.com/science-and-technology/rss.xml

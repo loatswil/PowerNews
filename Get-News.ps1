@@ -35,6 +35,9 @@ Param(
 $allstories = @()
 $Output = "~/Desktop/News.html"
 
+
+$NPRUS = Invoke-WebRequest https://www.npr.org/rss/rss.php?id=1003
+$NPRWorld = Invoke-WebRequest https://www.npr.org/rss/rss.php?id=1004
 $EconUS = Invoke-WebRequest https://www.economist.com/united-states/rss.xml
 $EconWorld = Invoke-WebRequest https://www.economist.com/international/rss.xml
 $EconTech = Invoke-WebRequest https://www.economist.com/science-and-technology/rss.xml
@@ -96,6 +99,8 @@ function PullNews2($feed) {
 }
 
 
+$allstories += PullNews2($NPRWorld)
+$allstories += PullNews2($NPRUS)
 $allstories += PullNews2($EconUS)
 $allstories += PullNews2($EconWorld)
 $allstories += PullNews2($EconTech)
