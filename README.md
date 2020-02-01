@@ -16,6 +16,9 @@ Feed Updates!!!
 
 Added 
 
+https://www.economist.com/united-states/rss.xml
+https://www.economist.com/international/rss.xml
+https://www.economist.com/science-and-technology/rss.xml
 https://www.engadget.com/rss.xml
 https://www.politico.com/
 https://feeds.a.dj.com/rss/RSSWorldNews.xml
