@@ -64,14 +64,17 @@ Write-Output "Pulling data from the sources..."
 ForEach ($feed in $allfeeds) {
     $rawfeed = Invoke-WebRequest $feed.feed # -verbose for troubleshooting
     if ($feed.type -like "1") {
+        Write-Host "Fetching"$feed.feed
         $allstories += PullNews1($rawfeed)
     }
     else {
+        Write-Host "Fetching"$feed.feed
         $allstories += PullNews2($rawfeed)
     }
 
 }
 
+Write-Host "Sorting..."    
 $allstories = $allstories | Sort-Object -Property pubdate -Descending
 function WriteFile() {
     Add-Content -Value (Write-Output "<b>News</b>") -Path $Output
@@ -97,6 +100,8 @@ if (Test-Path $Output) {
     else {
         New-Item -Path $Output -ItemType File -Confirm
     }
+
+Write-Host "Writing file..."    
 WriteFile
 Invoke-Item $Output
 Copy-Item -Path .\README.md -Destination .\readme.txt
