@@ -15,6 +15,9 @@
   
 #>
 
+# Nuke the progress bar for performance boost (y)
+$ProgressPreference = "SilentlyContinue"
+
 $allfeeds = @()
 $allstories = @()
 $Output = "~/Desktop/News.html"
@@ -55,8 +58,11 @@ function PullNews2($feed) {
     $stories
 }
 
+
+Write-Output "Pulling data from the sources..."
+
 ForEach ($feed in $allfeeds) {
-    $rawfeed = Invoke-WebRequest $feed.feed
+    $rawfeed = Invoke-WebRequest $feed.feed # -verbose for troubleshooting
     if ($feed.type -like "1") {
         $allstories += PullNews1($rawfeed)
     }
