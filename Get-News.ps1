@@ -11,8 +11,6 @@
 
 .EXAMPLE
     Get-News -ShowOutput
-
-  
 #>
 
 # Nuke the progress bar for performance boost (y)
@@ -63,7 +61,6 @@ function PullNews2($feed) {
     $stories
 }
 
-
 Write-Output "Pulling data from the sources..."
 
 ForEach ($feed in $allfeeds) {
@@ -106,7 +103,7 @@ if (Test-Path $Output) {
         New-Item -Path $Output -ItemType File -Confirm
     }
 
-Write-Host "Writing file..."    
+Write-Host "Writing files..."    
 WriteFile
 Invoke-Item $Output
 Copy-Item -Path .\README.md -Destination $Readme
