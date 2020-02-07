@@ -91,7 +91,8 @@ function WriteFile() {
         #Add-Content -Value (Write-Output "<font size=""+1"">"$story.feedtitle "</font>") -Path $Output
         Add-Content -Value (Write-Output "<br>") -Path $Output
         }
-        Add-Content -Value (Write-Output "<br><a href="readme.txt">readme.txt</a>") -Path $Output
+        # Removed for local script
+        # Add-Content -Value (Write-Output "<br><a href="readme.txt">readme.txt</a>") -Path $Output
 }  
 
 if (Test-Path $Output) {
@@ -104,4 +105,4 @@ if (Test-Path $Output) {
 Write-Host "Writing file..."    
 WriteFile
 Invoke-Item $Output
-Copy-Item -Path .\README.md -Destination .\readme.txt
+# Copy-Item -Path .\README.md -Destination .\readme.txt

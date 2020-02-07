@@ -18,9 +18,6 @@ Added
 
 https://www.npr.org/rss/rss.php?id=1003
 https://www.npr.org/rss/rss.php?id=1004
-https://www.economist.com/united-states/rss.xml
-https://www.economist.com/international/rss.xml
-https://www.economist.com/science-and-technology/rss.xml
 https://www.engadget.com/rss.xml
 https://www.politico.com/
 https://feeds.a.dj.com/rss/RSSWorldNews.xml
@@ -62,3 +59,4 @@ Removed for personal reasons
 
 https://www.buzzfeed.com/world.xml
 
+Removed for Paywall and not knowing how to format an XML feed properly (dates)!
