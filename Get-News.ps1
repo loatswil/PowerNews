@@ -20,7 +20,12 @@ $ProgressPreference = "SilentlyContinue"
 
 $allfeeds = @()
 $allstories = @()
-$Output = "~/Desktop/News.html"
+
+$Outpath = "C:\inetpub\wwwroot\"
+$Outfile = "News.html"
+$Readfile = "Readme.txt"
+$Output = $Outpath + $Outfile 
+$Readme = $Outpath + $Readfile
 
 $allfeeds = Import-Csv -Path .\news-sources.csv
 function PullNews1($feed) {
@@ -91,8 +96,7 @@ function WriteFile() {
         #Add-Content -Value (Write-Output "<font size=""+1"">"$story.feedtitle "</font>") -Path $Output
         Add-Content -Value (Write-Output "<br>") -Path $Output
         }
-        # Removed for local script
-        # Add-Content -Value (Write-Output "<br><a href="readme.txt">readme.txt</a>") -Path $Output
+        Add-Content -Value (Write-Output "<br><a href="readme.txt">Readme.txt</a>") -Path $Output
 }  
 
 if (Test-Path $Output) {
@@ -105,4 +109,4 @@ if (Test-Path $Output) {
 Write-Host "Writing file..."    
 WriteFile
 Invoke-Item $Output
-# Copy-Item -Path .\README.md -Destination .\readme.txt
+Copy-Item -Path .\README.md -Destination $Readme

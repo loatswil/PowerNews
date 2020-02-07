@@ -59,4 +59,4 @@ Removed for personal reasons
 
 https://www.buzzfeed.com/world.xml
 
-Removed for Paywall and not knowing how to format an XML feed properly (dates)!
+Removed Economist feeds for Paywall and not knowing how to format an XML feed properly (dates)!
