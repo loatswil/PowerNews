@@ -25,6 +25,7 @@ $Readfile = "Readme.txt"
 $Output = $Outpath + $Outfile 
 $Readme = $Outpath + $Readfile
 
+$topics = Import-Csv -Path .\topics.csv
 $allfeeds = Import-Csv -Path .\news-sources.csv
 function PullNews1($feed) {
     [xml]$feedxml = $feed.Content
@@ -83,15 +84,21 @@ function WriteFile() {
     Add-Content -Value (Get-date) -Path $Output
     Add-Content -Value ("<br>") -Path $Output
     foreach($story in $allstories) {
-        Add-Content -Value (Write-Output "<font size=""-1"">"$story.pubdate "</font>") -Path $Output       
-        Add-Content -Value (Write-Output "&nbsp;") -Path $Output
-        Add-Content -Value (Write-Output "<a href=""") -Path $Output
-        Add-Content -Value ($story.link) -Path $Output
-        Add-Content -Value (Write-Output """>") -Path $Output
-        Add-Content -Value ($story.title) -Path $Output
-        Add-Content -Value (Write-Output "</a>") -Path $Output
-        #Add-Content -Value (Write-Output "<font size=""+1"">"$story.feedtitle "</font>") -Path $Output
-        Add-Content -Value (Write-Output "<br>") -Path $Output
+            foreach($item in $topics) {
+                if ($item.type -like "black"){
+                    if ($story.title -notmatch $item.term) {
+                        Add-Content -Value (Write-Output "<font size=""-1"">"$story.pubdate "</font>") -Path $Output       
+                        Add-Content -Value (Write-Output "&nbsp;") -Path $Output
+                        Add-Content -Value (Write-Output "<a href=""") -Path $Output
+                        Add-Content -Value ($story.link) -Path $Output
+                        Add-Content -Value (Write-Output """>") -Path $Output
+                        Add-Content -Value ($story.title) -Path $Output
+                        Add-Content -Value (Write-Output "</a>") -Path $Output
+                        #Add-Content -Value (Write-Output "<font size=""+1"">"$story.feedtitle "</font>") -Path $Output
+                        Add-Content -Value (Write-Output "<br>") -Path $Output            
+                    }
+                }
+            }
         }
         Add-Content -Value (Write-Output "<br><a href="readme.txt">Readme.txt</a>") -Path $Output
 }  
