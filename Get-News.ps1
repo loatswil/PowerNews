@@ -22,10 +22,13 @@ $allstories = @()
 $Outpath = "C:\inetpub\wwwroot\"
 $Outfile = "News.html"
 $Readfile = "Readme.txt"
+$Topicsfile = "Topics.txt"
+
 $Output = $Outpath + $Outfile 
 $Readme = $Outpath + $Readfile
+$Topics = $Outpath + $Topicsfile
 
-$topics = Import-Csv -Path .\topics.csv
+$alltopics = Import-Csv -Path .\topics.csv
 $allfeeds = Import-Csv -Path .\news-sources.csv
 function PullNews1($feed) {
     [xml]$feedxml = $feed.Content
@@ -84,7 +87,7 @@ function WriteFile() {
     Add-Content -Value (Get-date) -Path $Output
     Add-Content -Value ("<br>") -Path $Output
     foreach($story in $allstories) {
-            foreach($item in $topics) {
+            foreach($item in $alltopics) {
                 if ($item.type -like "black"){
                     if ($story.title -notmatch $item.term) {
                         Add-Content -Value (Write-Output "<font size=""-1"">"$story.pubdate "</font>") -Path $Output       
@@ -101,6 +104,7 @@ function WriteFile() {
             }
         }
         Add-Content -Value (Write-Output "<br><a href="readme.txt">Readme.txt</a>") -Path $Output
+        Add-Content -Value (Write-Output "<br><a href="topics.txt">Topics.txt</a>") -Path $Output
 }  
 
 if (Test-Path $Output) {
@@ -114,3 +118,4 @@ Write-Host "Writing files..."
 WriteFile
 Invoke-Item $Output
 Copy-Item -Path .\README.md -Destination $Readme
+Copy-Item -Path .\topics.csv -Destination $Topics

@@ -1,6 +1,9 @@
 # PowerNews
 PowerShell script to get RSS news feeds.
 
+Added blacklist from topics.csv. Hoping to incorporate whitelists from the 
+same file. Not sure if that's doable though.
+
 Trying to incorporate a blacklist/whitelist feature now.
 
 
