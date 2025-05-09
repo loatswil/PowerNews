@@ -1,4 +1,5 @@
-Jigglethecable
+https://www.microsoft.com/releasecommunications/api/v2/m365/rss
+https://rssfeed.azure.status.microsoft/en-us/status/feed/
 http://feeds.feedburner.com/NakedSecurity
 https://www.us-cert.gov/ncas/all.xml
 https://msrc-blog.microsoft.com/feed
@@ -6,28 +7,30 @@ http://isc.sans.org/rssfeed.xml
 http://feeds2.feedburner.com/security-awareness-tip-of-the-day
 http://rss.slashdot.org/Slashdot/slashdotMain
 https://hackspace.raspberrypi.org/feed
-
 http://www.us-cert.gov/current/index.rdf
 http://news.cnet.com/8300-17938_105-1.xml
-
 http://www.wired.com/news/feeds/rss2/0,2610,40,00.xml
 http://www.engadget.com/rss.xml
 http://rss.slashdot.org/Slashdot/slashdotHardware
 http://www.hackaday.com/rss.xml
-
-
-News
 https://www.bleepingcomputer.com/feed/
 http://xkcd.com/rss.xml
 http://feeds.feedburner.com/failblog
 http://feeds.feedblitz.com/Memebase
 http://syndication.thedailywtf.com/TheDailyWtf
+https://news.ycombinator.com/rss
+
 
 http://www.menshealth.com/events-promotions/washpofeed
 http://www.appleinsider.com/appleinsider.rss
 https://www.engadget.com/rss.xml
 http://lifehacker.com/index.xml
 
+https://feeds.content.dowjones.io/public/rss/RSSWorldNews
+https://feeds.content.dowjones.io/public/rss/RSSUSnews
+https://news.mit.edu/rss/feed
+https://www.newyorker.com/feed/rss
+https://feeds.businessinsider.com/custom/all
 https://blog.ap.org/feed.rss
 https://www.npr.org/rss/rss.php?id=1003
 https://www.economist.com/united-states/rss.xml
@@ -56,7 +59,6 @@ http://feeds.bbci.co.uk/news/technology/rss.xml
 https://rssfeeds.usatoday.com/usatoday-TechTopStories
 https://feeds.a.dj.com/rss/RSSWSJD.xml
 
-Bonecrushingsound
 https://www.warcraftpets.com/feed.xml
 https://www.wow-petguide.com/rss/rss_feed.xml
 https://wowpetaddiction.blogspot.com/feeds/posts/default
@@ -69,3 +71,7 @@ https://www.wowhead.com/news/rss/retail
 https://www.wowhead.com/news/rss/in-dev
 https://www.wowhead.com/news/rss/other-blizzard-games
 https://www.wowhead.com/news/rss/classic
+
+https://www.kgw.com/feeds/syndication/rss/news
+https://www.koin.com/feed/
+https://www.wweek.com/arc/outboundfeeds/rss/?outputType=xml
