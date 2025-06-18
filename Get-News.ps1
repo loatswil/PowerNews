@@ -1,121 +1,104 @@
-# Get-News
-# Used to get the news from various sources and writes the output
-# to the users desktop in HTML readable format.
-
 <#
 .SYNOPSIS
     Reads news from select locations.
     
 .DESCRIPTION
-    The cmdlet will dump an HTML file to the users desktop with current news.
+    The cmdlet will dump RSS news feeds to the screen.
 
 .EXAMPLE
-    Get-News -ShowOutput
+    Get-News -type IT
 #>
 
-# Nuke the progress bar for performance boost (y)
-$ProgressPreference = "SilentlyContinue"
+Param(
+        [Parameter(Mandatory=$true,
+        HelpMessage="Type of news to pull. Options are IT, US, World, Games, Fun, or Portland.")]
+        [ValidateSet("IT", "US", "World", "Games", "Fun", "Portland")]
+        [string] $Type = "US",
 
-$allfeeds = @()
-$allstories = @()
+        [Parameter(Mandatory=$false)]
+        [array] $BlockList
+)
 
-$Outpath = "C:\inetpub\wwwroot\"
-$Outfile = "News.html"
-$Readfile = "Readme.txt"
-$Topicsfile = "Topics.txt"
+$World =    "https://www.npr.org/rss/rss.php?id=1004",
+            "https://feeds.a.dj.com/rss/RSSWorldNews.xml",
+            "https://www.theguardian.com/world/rss"
 
-$Output = $Outpath + $Outfile 
-$Readme = $Outpath + $Readfile
-$Topics = $Outpath + $Topicsfile
+$Fun =  "https://www.goodnewsnetwork.org/category/news/feed/",
+        "https://www.newyorker.com/feed/rss",
+        "http://news.mit.edu/rss/feed",
+        "https://feeds.content.dowjones.io/public/rss/RSSLifestyle",
+        "https://feeds.content.dowjones.io/public/rss/socialhealth",
+        "https://feeds.content.dowjones.io/public/rss/RSSArtsCulture"
 
-$alltopics = Import-Csv -Path .\topics.csv
-$allfeeds = Import-Csv -Path .\news-sources.csv
-function PullNews1($feed) {
-    [xml]$feedxml = $feed.Content
-    $stories = @()
-    $items = $feedxml.rss.channel.item
-    $feedtitle = $feedxml.rss.channel.title
-        ForEach ($item in $items) {
-            $title = $item.title."#cdata-section"
-            $link = $item.link
-            $pubdate = $item.pubdate
-            $pubdate = $pubdate | Get-Date -ErrorAction SilentlyContinue
-            $desc = $item.description."#cdata-section"
-            $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc;feedtitle=$feedtitle}
-            $stories += $story
+$US =   "https://www.npr.org/rss/rss.php?id=1003",
+        "https://feeds.content.dowjones.io/public/rss/RSSUSnews"
+
+$Portland = "https://www.koin.com/feed",
+            "https://www.kgw.com/feeds/syndication/rss/news"
+
+$ITNews =   "https://news.ycombinator.com/rss",
+            "https://www.bleepingcomputer.com/feed/",
+            "https://www.techdirt.com/feed/",
+            "https://hackspace.raspberrypi.org/feed/"
+
+$Game = "https://www.gamespot.com/feeds/news/",
+        "https://www.wowhead.com/news/rss/retail"
+
+function PullNews($Feed) {
+    [xml]$FeedXml = $Feed.Content
+    $Stories = @()
+    $Items = $FeedXml.rss.channel.item
+    $FeedTitle = $FeedXml.rss.channel.title
+        ForEach ($Item in $Items) {
+                $Story = New-Object psobject
+                $Story | Add-Member title $item.title
+                $Story | Add-Member feedtitle $feedtitle
+                $Story | Add-Member link $item.link
+                $pubdate = $item.pubdate | Get-Date -ErrorAction SilentlyContinue
+                $Story | Add-Member pubdate $pubdate
+                $Stories += $Story
         }
-    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 3 | Sort-Object -Property pubdate -Descending 
-    $stories
-}
-function PullNews2($feed) {
-    [xml]$feedxml = $feed.Content
-    $stories = @()
-    $items = $feedxml.rss.channel.item
-    $feedtitle = $feedxml.rss.channel.title
-        ForEach ($item in $items) {
-                $title = $item.title
-                $link = $item.link
-                $pubdate = $item.pubdate
-                $pubdate = $pubdate | Get-Date -ErrorAction SilentlyContinue
-                $desc = $item.description
-                $story = new-object psobject -prop @{title=$title;link=$link;pubdate=$pubdate;desc=$desc;feedtitle=$feedtitle}
-                $stories += $story
-        }
-    $stories = $stories | Sort-Object pubdate -Descending | Select-Object -First 3 | Sort-Object -Property pubdate -Descending
-    $stories
-}
-
-Write-Output "Pulling data from the sources..."
-
-ForEach ($feed in $allfeeds) {
-    $rawfeed = Invoke-WebRequest $feed.feed # -verbose for troubleshooting
-    if ($feed.type -like "1") {
-        Write-Host "Fetching"$feed.feed
-        $allstories += PullNews1($rawfeed)
-    }
-    else {
-        Write-Host "Fetching"$feed.feed
-        $allstories += PullNews2($rawfeed)
-    }
-
+    $Stories = $Stories | Select-Object -First 3
+    $Stories
 }
 
-Write-Host "Sorting..."    
-$allstories = $allstories | Sort-Object -Property pubdate -Descending
-function WriteFile() {
-    Add-Content -Value (Write-Output "<b>News</b>") -Path $Output
-    Add-Content -Value (Get-date) -Path $Output
-    Add-Content -Value ("<br>") -Path $Output
-    foreach($story in $allstories) {
-            foreach($item in $alltopics) {
-                if ($item.type -like "black"){
-                    if ($story.title -notmatch $item.term) {
-                        Add-Content -Value (Write-Output "<font size=""-1"">"$story.pubdate "</font>") -Path $Output       
-                        Add-Content -Value (Write-Output "&nbsp;") -Path $Output
-                        Add-Content -Value (Write-Output "<a href=""") -Path $Output
-                        Add-Content -Value ($story.link) -Path $Output
-                        Add-Content -Value (Write-Output """>") -Path $Output
-                        Add-Content -Value ($story.title) -Path $Output
-                        Add-Content -Value (Write-Output "</a>") -Path $Output
-                        #Add-Content -Value (Write-Output "<font size=""+1"">"$story.feedtitle "</font>") -Path $Output
-                        Add-Content -Value (Write-Output "<br>") -Path $Output            
-                    }
-                }
-            }
-        }
-        Add-Content -Value (Write-Output "<br><a href="readme.txt">Readme.txt</a>") -Path $Output
-        Add-Content -Value (Write-Output "<br><a href="topics.txt">Topics.txt</a>") -Path $Output
-}  
+$Sources = switch ($Type) {
+    IT          {$ITNews}
+    Games       {$Game}
+    US          {$US}
+    World       {$World}
+    Fun         {$Fun}
+    Portland    {$Portland}
+}
 
-if (Test-Path $Output) {
-    Clear-Content $Output
-    }
-    else {
-        New-Item -Path $Output -ItemType File -Confirm
-    }
+$TypeColor = switch ($Type) {
+    IT          {'Green'}
+    Games       {'Yellow'}
+    US          {'Red'}
+    World       {'Cyan'}
+    Fun         {'Magenta'}
+    Portland    {'Gray'}
+}
 
-Write-Host "Writing files..."    
-WriteFile
-Invoke-Item $Output
-Copy-Item -Path .\README.md -Destination $Readme
-Copy-Item -Path .\topics.csv -Destination $Topics
+ForEach ($Feed in $Sources) {
+    $RawFeed = Invoke-WebRequest $Feed
+    $AllStories += PullNews($RawFeed)
+}
+
+$AllStories = $AllStories | Sort-Object -Property pubdate -Descending
+
+if ($Blocklist) {
+    foreach ($Block in $BlockList.Split(",")) {
+       # Write-Host "Blocking stories with: $Block" -ForegroundColor Red
+        $AllStories = $AllStories | Where-Object { $_.title -notlike "*$Block*" }
+    }
+}
+
+$AllStories | ForEach-Object {
+    Write-Host "-----------------------------"
+    Write-Host "$($_.FeedTitle) " -ForegroundColor $TypeColor -NoNewline
+    Write-Host "$($_.pubdate)" -ForegroundColor Yellow
+    Write-Host "$($_.title)"
+    Write-Host "$($_.link)"
+    Write-Host ""
+}
