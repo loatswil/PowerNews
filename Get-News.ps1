@@ -10,82 +10,48 @@
 #>
 
 Param(
-        [Parameter(Mandatory=$true,
-        HelpMessage="Type of news to pull. Options are IT, US, World, Games, Fun, or Portland.")]
-        [ValidateSet("IT", "US", "World", "Games", "Fun", "Portland")]
-        [string] $Type = "US",
+        [Parameter(Mandatory,
+        HelpMessage = "Enter a type of news such as: IT, US, World, Fun, Games, etc.")]
+        [array] $Types,
 
         [Parameter(Mandatory=$false)]
         [array] $BlockList
 )
 
-$World =    "https://www.npr.org/rss/rss.php?id=1004",
-            "https://feeds.a.dj.com/rss/RSSWorldNews.xml",
-            "https://www.theguardian.com/world/rss"
-
-$Fun =  "https://www.goodnewsnetwork.org/category/news/feed/",
-        "https://www.newyorker.com/feed/rss",
-        "http://news.mit.edu/rss/feed",
-        "https://feeds.content.dowjones.io/public/rss/RSSLifestyle",
-        "https://feeds.content.dowjones.io/public/rss/socialhealth",
-        "https://feeds.content.dowjones.io/public/rss/RSSArtsCulture"
-
-$US =   "https://www.npr.org/rss/rss.php?id=1003",
-        "https://feeds.content.dowjones.io/public/rss/RSSUSnews"
-
-$Portland = "https://www.koin.com/feed",
-            "https://www.kgw.com/feeds/syndication/rss/news"
-
-$ITNews =   "https://news.ycombinator.com/rss",
-            "https://www.bleepingcomputer.com/feed/",
-            "https://www.techdirt.com/feed/",
-            "https://hackspace.raspberrypi.org/feed/"
-
-$Game = "https://www.gamespot.com/feeds/news/",
-        "https://www.wowhead.com/news/rss/retail"
+$Sources = Import-csv ./RSSFeeds.csv
 
 function PullNews($Feed) {
     [xml]$FeedXml = $Feed.Content
     $Stories = @()
-    $Items = $FeedXml.rss.channel.item
-    $FeedTitle = $FeedXml.rss.channel.title
+    if ($FeedXml.rss.channel.title."#cdata-section") {
+        $FeedTitle = $FeedXml.rss.channel.title."#cdata-section"
+    } else {
+        $FeedTitle = $feedxml.rss.channel.title
+    }
+    $Items = $feedxml.rss.channel.item
         ForEach ($Item in $Items) {
-                $Story = New-Object psobject
+            $Story = New-Object psobject
+            if($item.title."#cdata-section") {
+                $Story | Add-Member title $item.title."#cdata-section"
+            } else {
                 $Story | Add-Member title $item.title
-                $Story | Add-Member feedtitle $feedtitle
-                $Story | Add-Member link $item.link
-                $pubdate = $item.pubdate | Get-Date -ErrorAction SilentlyContinue
-                $Story | Add-Member pubdate $pubdate
-                $Stories += $Story
+            }
+            $Story | Add-Member FeedTitle $FeedTitle
+            $Story | Add-Member link $item.link
+            $pubdate = $item.pubdate | Get-Date -ErrorAction SilentlyContinue
+            $Story | Add-Member pubdate $pubdate
+            $Stories += $Story
         }
-    $Stories = $Stories | Select-Object -First 3
+    $Stories = $Stories | Sort-Object pubdate -Descending | Select-Object -First 2
     $Stories
 }
 
-$Sources = switch ($Type) {
-    IT          {$ITNews}
-    Games       {$Game}
-    US          {$US}
-    World       {$World}
-    Fun         {$Fun}
-    Portland    {$Portland}
+ForEach ($Type in $Types) {
+    ForEach ($Feed in $Sources | Where-Object {$_.type -eq $Type} ) { 
+        $RawFeed = Invoke-WebRequest $Feed.url
+        $AllStories += PullNews($RawFeed)
+    }
 }
-
-$TypeColor = switch ($Type) {
-    IT          {'Green'}
-    Games       {'Yellow'}
-    US          {'Red'}
-    World       {'Cyan'}
-    Fun         {'Magenta'}
-    Portland    {'Gray'}
-}
-
-ForEach ($Feed in $Sources) {
-    $RawFeed = Invoke-WebRequest $Feed
-    $AllStories += PullNews($RawFeed)
-}
-
-$AllStories = $AllStories | Sort-Object -Property pubdate -Descending
 
 if ($Blocklist) {
     foreach ($Block in $BlockList.Split(",")) {
@@ -94,9 +60,11 @@ if ($Blocklist) {
     }
 }
 
+$AllStories = $AllStories | Sort-Object -Property pubdate -Descending
+
 $AllStories | ForEach-Object {
     Write-Host "-----------------------------"
-    Write-Host "$($_.FeedTitle) " -ForegroundColor $TypeColor -NoNewline
+    Write-Host "$($_.FeedTitle) " -ForegroundColor Green -NoNewline
     Write-Host "$($_.pubdate)" -ForegroundColor Yellow
     Write-Host "$($_.title)"
     Write-Host "$($_.link)"
