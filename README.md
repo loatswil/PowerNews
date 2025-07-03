@@ -1,11 +1,15 @@
 # PowerNews
+Script now reads from CSV again but with topics and blocklist.
+
+Also added script for Slashdot since they have a funky format.
+
 PowerShell script to get RSS news feeds.
 
 Updated script to have internal feeds for different topics and a parameter to choose
 from those topics. Also a Blocklist parameter to remove terms from the stories
 returned.
 
-Added blacklist from topics.csv. Hoping to incorporate whitelists from the 
+Added blocklist from topics.csv. Hoping to incorporate whitelists from the 
 same file. Not sure if that's doable though.
 
 Trying to incorporate a blacklist/whitelist feature now.
