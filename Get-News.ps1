@@ -3,7 +3,8 @@
     Reads news from select locations.
     
 .DESCRIPTION
-    The cmdlet will dump RSS news feeds to the screen.
+    The cmdlet will dump RSS news feeds to the screen. 
+    IT, World, US, Fun, Games, Apple, Microsoft, Movies, Portland
 
 .EXAMPLE
     Get-News -type IT
@@ -11,11 +12,14 @@
 
 Param(
         [Parameter(Mandatory,
-        HelpMessage = "Enter a type of news such as: IT, US, World, Fun, Games, etc.")]
+        HelpMessage = "Enter a type of news such as: IT, World, US, Fun, Games, Apple, Microsoft, Movies, Portland, etc.")]
         [array] $Types,
 
         [Parameter(Mandatory=$false)]
-        [array] $BlockList
+        [array] $BlockList,
+
+        [Parameter(Mandatory=$false)]
+        [switch] $Today
 )
 
 $Sources = Import-csv ./RSSFeeds.csv
@@ -42,7 +46,7 @@ function PullNews($Feed) {
             $Story | Add-Member pubdate $pubdate
             $Stories += $Story
         }
-    $Stories = $Stories | Sort-Object pubdate -Descending | Select-Object -First 2
+    $Stories = $Stories | Sort-Object pubdate -Descending | Select-Object -First 3
     $Stories
 }
 
@@ -58,6 +62,10 @@ if ($Blocklist) {
        # Write-Host "Blocking stories with: $Block" -ForegroundColor Red
         $AllStories = $AllStories | Where-Object { $_.title -notlike "*$Block*" }
     }
+}
+
+if ($Today) {
+    $AllStories = $AllStories | Where-Object { $_.pubdate.DayOfYear -eq (Get-Date).DayOfYear}
 }
 
 $AllStories = $AllStories | Sort-Object -Property pubdate -Descending

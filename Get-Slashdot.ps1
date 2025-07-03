@@ -11,11 +11,20 @@
 
 Param(
         [Parameter(Mandatory=$false)]
-        [array] $BlockList
+        [array] $BlockList,
+
+        [Parameter(Mandatory=$false)]
+        [switch] $Today
 )
 
 $Sources =  "http://rss.slashdot.org/Slashdot/slashdotMain",
             "http://rss.slashdot.org/Slashdot/slashdotGames",
+            "http://rss.slashdot.org/Slashdot/slashdotAskSlashdot",
+            "http://rss.slashdot.org/Slashdot/slashdotYourRightsOnline",
+            "http://rss.slashdot.org/Slashdot/slashdotPolitics",
+            "http://rss.slashdot.org/Slashdot/slashdotLinux",
+            "http://rss.slashdot.org/Slashdot/slashdotDevelopers",
+            "https://rss.slashdot.org/Slashdot/slashdotScience",
             "http://rss.slashdot.org/Slashdot/slashdotHardware"
 function PullNews($Feed) {
     [xml]$FeedXml = $Feed.Content
@@ -46,6 +55,10 @@ if ($Blocklist) {
        # Write-Host "Blocking stories with: $Block" -ForegroundColor Red
         $AllStories = $AllStories | Where-Object { $_.title -notlike "*$Block*" }
     }
+}
+
+if ($Today) {
+    $AllStories = $AllStories | Where-Object { $_.pubdate.DayOfYear -eq (Get-Date).DayOfYear}
 }
 
 $AllStories = $AllStories | Sort-Object -Property pubdate -Descending
