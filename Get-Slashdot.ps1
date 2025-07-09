@@ -14,7 +14,8 @@ Param(
         [array] $BlockList,
 
         [Parameter(Mandatory=$false)]
-        [switch] $Today
+        [string] $Days
+
 )
 
 $Sources =  "http://rss.slashdot.org/Slashdot/slashdotMain",
@@ -57,11 +58,14 @@ if ($Blocklist) {
     }
 }
 
-if ($Today) {
-    $AllStories = $AllStories | Where-Object { $_.pubdate.DayOfYear -eq (Get-Date).DayOfYear}
+if ($Days) {
+    $AllStories = $AllStories | Where-Object { $_.pubdate.DayOfYear -ge (Get-Date).AddDays(-$Days).DayOfYear }
+    $doy = (Get-Date).AddDays(-$Days).DayOfYear
 }
 
 $AllStories = $AllStories | Sort-Object -Property pubdate -Descending
+
+Clear-Host
 
 $AllStories | ForEach-Object {
     Write-Host "-----------------------------"
