@@ -26,3 +26,5 @@ https://www.gamespot.com/feeds/news
 https://www.wowhead.com/news/rss/retail
 
 Cats!
+
+Dogs!
