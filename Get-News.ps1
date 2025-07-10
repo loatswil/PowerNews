@@ -70,6 +70,8 @@ if ($Today) {
 
 $AllStories = $AllStories | Sort-Object -Property pubdate -Descending
 
+Clear-Host
+
 $AllStories | ForEach-Object {
     Write-Host "-----------------------------"
     Write-Host "$($_.FeedTitle) " -ForegroundColor Green -NoNewline
