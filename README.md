@@ -3,6 +3,8 @@ PowerShell script to get RSS news feeds.
 
 Script now reads from CSV again but with topics and blocklist.
 
+I need to change "Types" parameter to "Topics" and add the Topics to the help.
+
 Added "Days" parameter to limit to current stories.
 
 Added "Blocklist" parameter to exclude stories. Need to add filter to URL as well as story titles.
