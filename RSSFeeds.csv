@@ -27,3 +27,6 @@ Games,https://www.gamespot.com/feeds/news/
 Games,https://www.videogameschronicle.com/category/news/feed/
 Portland,https://www.koin.com/feed
 Portland,https://www.kgw.com/feeds/syndication/rss/news
+World,https://rss.nytimes.com/services/xml/rss/nyt/World.xml
+US,https://rss.nytimes.com/services/xml/rss/nyt/US.xml
+IT,https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
