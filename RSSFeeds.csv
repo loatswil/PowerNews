@@ -30,3 +30,5 @@ Portland,https://www.kgw.com/feeds/syndication/rss/news
 World,https://rss.nytimes.com/services/xml/rss/nyt/World.xml
 US,https://rss.nytimes.com/services/xml/rss/nyt/US.xml
 IT,https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
+US,https://www.seattletimes.com/nation/feed/
+World,https://www.seattletimes.com/world/feed/
