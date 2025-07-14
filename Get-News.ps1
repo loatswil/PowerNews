@@ -57,7 +57,11 @@ $Sources = @(
     [PSCustomObject]@{ type = "Portland"; url = "https://www.kgw.com/feeds/syndication/rss/news" },
     [PSCustomObject]@{ type = "World"; url = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml" },
     [PSCustomObject]@{ type = "US"; url = "https://rss.nytimes.com/services/xml/rss/nyt/US.xml" },
-    [PSCustomObject]@{ type = "IT"; url = "https://rss.nytimes.com/services/xml/rss" }
+    [PSCustomObject]@{ type = "IT"; url = "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml" },
+    [PSCustomObject]@{ type = "US"; url = "https://www.seattletimes.com/nation/feed/" },
+    [PSCustomObject]@{ type = "World"; url = "https://www.seattletimes.com/world/feed/" },
+    [PSCustomObject]@{ type = "Movies"; url = "https://www.seattletimes.com/movies/feed/" },
+    [PSCustomObject]@{ type = "IT"; url = "https://www.seattletimes.com/technology/feed/" }
     )
  
 function PullNews($Feed) {
