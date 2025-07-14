@@ -32,3 +32,5 @@ US,https://rss.nytimes.com/services/xml/rss/nyt/US.xml
 IT,https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml
 US,https://www.seattletimes.com/nation/feed/
 World,https://www.seattletimes.com/world/feed/
+Movies,https://www.seattletimes.com/movies/feed/
+IT,https://www.seattletimes.com/technology/feed/
