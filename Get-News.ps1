@@ -22,8 +22,44 @@ Param(
         [string] $Days
 )
 
-$Sources = Import-csv ./RSSFeeds.csv
+#$Sources = Import-csv ./RSSFeeds.csv
 
+# Create an array of custom objects
+$Sources = @(
+    [PSCustomObject]@{ type = "IT"; url = "https://news.ycombinator.com/rss" },
+    [PSCustomObject]@{ type = "IT"; url = "https://www.techdirt.com/feed/" },
+    [PSCustomObject]@{ type = "Fun"; url = "https://hackspace.raspberrypi.org/feed" },
+    [PSCustomObject]@{ type = "IT"; url = "https://www.bleepingcomputer.com/feed/" },
+    [PSCustomObject]@{ type = "Microsoft"; url = "https://www.microsoft.com/en-us/microsoft-365/blog/feed/" },
+    [PSCustomObject]@{ type = "Microsoft"; url = "https://azure.microsoft.com/en-us/blog/feed/" },
+    [PSCustomObject]@{ type = "Apple"; url = "https://www.appleinsider.com/appleinsider.rss" },
+    [PSCustomObject]@{ type = "Apple"; url = "https://feeds.macrumors.com/MacRumors-All" },
+    [PSCustomObject]@{ type = "Movies"; url = "https://variety.com/v/film/feed" },
+    [PSCustomObject]@{ type = "Movies"; url = "https://www.themix.net/feed/" },
+    [PSCustomObject]@{ type = "Fun"; url = "http://news.mit.edu/rss/feed" },
+    [PSCustomObject]@{ type = "Fun"; url = "http://www.menshealth.com/events-promotions/washpofeed" },
+    [PSCustomObject]@{ type = "Fun"; url = "https://feeds.content.dowjones.io/public/rss/RSSLifestyle" },
+    [PSCustomObject]@{ type = "Fun"; url = "https://feeds.content.dowjones.io/public/rss/socialhealth" },
+    [PSCustomObject]@{ type = "Fun"; url = "https://feeds.content.dowjones.io/public/rss/RSSArtsCulture" },
+    [PSCustomObject]@{ type = "World"; url = "https://www.npr.org/rss/rss.php?id=1004" },
+    [PSCustomObject]@{ type = "World"; url = "https://feeds.a.dj.com/rss/RSSWorldNews.xml" },
+    [PSCustomObject]@{ type = "World"; url = "https://www.theguardian.com/world/rss" },
+    [PSCustomObject]@{ type = "World"; url = "https://www.rawstory.com/feeds/feed.rss" },
+    [PSCustomObject]@{ type = "US"; url = "https://www.npr.org/rss/rss.php?id=1003" },
+    [PSCustomObject]@{ type = "US"; url = "https://feeds.content.dowjones.io/public/rss/RSSUSnews" },
+    [PSCustomObject]@{ type = "US"; url = "https://www.rawstory.com/feeds/us-news.rss" },
+    [PSCustomObject]@{ type = "Games"; url = "https://www.wowhead.com/news/rss/retail" },
+    [PSCustomObject]@{ type = "Games"; url = "https://www.wowhead.com/news/rss/other-blizzard-games" },
+    [PSCustomObject]@{ type = "Games"; url = "https://www.gamespot.com/feeds/news/" },
+    [PSCustomObject]@{ type = "Games"; url = "https://www.videogameschronicle.com/category/news/feed/" },
+    [PSCustomObject]@{ type = "Games"; url = "https://www.seattletimes.com/video-games/feed/" },
+    [PSCustomObject]@{ type = "Portland"; url = "https://www.koin.com/feed" },
+    [PSCustomObject]@{ type = "Portland"; url = "https://www.kgw.com/feeds/syndication/rss/news" },
+    [PSCustomObject]@{ type = "World"; url = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml" },
+    [PSCustomObject]@{ type = "US"; url = "https://rss.nytimes.com/services/xml/rss/nyt/US.xml" },
+    [PSCustomObject]@{ type = "IT"; url = "https://rss.nytimes.com/services/xml/rss" }
+    )
+ 
 function PullNews($Feed) {
     [xml]$FeedXml = $Feed.Content
     $Stories = @()
