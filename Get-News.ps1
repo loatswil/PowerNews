@@ -35,7 +35,7 @@ $Sources = @(
     [PSCustomObject]@{ type = "Apple"; url = "https://www.appleinsider.com/appleinsider.rss" },
     [PSCustomObject]@{ type = "Apple"; url = "https://feeds.macrumors.com/MacRumors-All" },
     [PSCustomObject]@{ type = "Movies"; url = "https://variety.com/v/film/feed" },
-    [PSCustomObject]@{ type = "Movies"; url = "https://www.themix.net/feed/" },
+#    [PSCustomObject]@{ type = "Movies"; url = "https://www.themix.net/feed/" },
     [PSCustomObject]@{ type = "Fun"; url = "http://news.mit.edu/rss/feed" },
     [PSCustomObject]@{ type = "Fun"; url = "http://www.menshealth.com/events-promotions/washpofeed" },
     [PSCustomObject]@{ type = "Fun"; url = "https://feeds.content.dowjones.io/public/rss/RSSLifestyle" },
