@@ -77,3 +77,6 @@ https://www.wowhead.com/news/rss/classic
 https://www.kgw.com/feeds/syndication/rss/news
 https://www.koin.com/feed/
 https://www.wweek.com/arc/outboundfeeds/rss/?outputType=xml
+https://www.portlandmercury.com/portland/Rss.xml?section=22213/feed
+https://www.oregonlive.com/arc/outboundfeeds/rss/category/portland/?outputType=xml
+
