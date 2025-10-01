@@ -26,6 +26,9 @@ Param(
 
 # Create an array of custom objects
 $Sources = @(
+    [PSCustomObject]@{ type = "IT"; url = "https://feeds.bloomberg.com/technology/news.rss" },
+    [PSCustomObject]@{ type = "Fun"; url = "https://feeds.bloomberg.com/bview/news.rss" },
+    [PSCustomObject]@{ type = "US"; url = "https://feeds.bloomberg.com/politics/news.rss" },
     [PSCustomObject]@{ type = "IT"; url = "https://news.ycombinator.com/rss" },
     [PSCustomObject]@{ type = "IT"; url = "https://www.techdirt.com/feed/" },
     [PSCustomObject]@{ type = "Fun"; url = "https://hackspace.raspberrypi.org/feed" },

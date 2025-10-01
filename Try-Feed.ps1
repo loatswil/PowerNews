@@ -36,7 +36,7 @@ function PullNews($Feed) {
             $Story | Add-Member pubdate $pubdate
             $Stories += $Story
         }
-    $Stories = $Stories | Sort-Object pubdate -Descending | Select-Object -First 1
+    $Stories = $Stories | Sort-Object pubdate -Descending | Select-Object -First 10
     $Stories
 }
 
