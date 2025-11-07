@@ -109,7 +109,7 @@
 		<url>https://rss.nytimes.com/services/xml/rss/nyt/World.xml</url>
 	</world>
 	<games>
-		<url>https://www.gamespot.com/feeds/news<url>
+		<url>https://www.gamespot.com/feeds/news</url>
 		<url>https://www.videogameschronicle.com/category/news/feed</url>
 		<url>https://www.seattletimes.com/video-games/feed</url>
 		<url>https://www.warcraftpets.com/feed.xml</url>
@@ -125,7 +125,6 @@
 		<url>https://www.wowhead.com/news/rss/in-dev</url>
 		<url>https://www.wowhead.com/news/rss/other-blizzard-games</url>
 		<url>https://www.wowhead.com/news/rss/classic</url>
-		<url>https://www.mmo-champion.com/external.php?do=rss&type=newcontent&sectionid=1&days=120&count=10</url>
 		<url>https://gamerant.com/feed</url>
 		<url>https://www.videogameschronicle.com/category/news/feed</url>
 	</games>
