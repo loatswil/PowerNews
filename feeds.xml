@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feeds>
 	<tech>
+		<url>https://proton.me/blog/feed</url>
 		<url>https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml</url>
 		<url>https://www.uctoday.com/feed</url>
 		<url>https://www.techdirt.com/feed</url>
