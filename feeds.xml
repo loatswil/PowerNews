@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feeds>
 	<tech>
+		<url>https://www.theverge.com/</url>
 		<url>https://proton.me/blog/feed</url>
 		<url>https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml</url>
 		<url>https://www.uctoday.com/feed</url>
@@ -111,6 +112,7 @@
 		<url>https://rss.nytimes.com/services/xml/rss/nyt/World.xml</url>
 	</world>
 	<games>
+		<url>https://www.gamersheroes.com/feed/</url>
 		<url>https://www.gamespot.com/feeds/news</url>
 		<url>https://www.videogameschronicle.com/category/news/feed</url>
 		<url>https://www.seattletimes.com/video-games/feed</url>
